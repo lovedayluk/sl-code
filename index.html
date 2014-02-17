@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="css/jquery.mobile.flatui.css" />
+  <link rel="stylesheet" type="text/css" href="css/style.css" />
+  <script src="js/jquery.js"></script>
+  <script src="js/jquery.mobile-1.4.0-rc.1.js"></script>
+</head>
+<body>
+	<script>
+	function change_page(id, callback, option){
+		$("#"+id).click(callback);
+		var _get = "";
+		for(var i in option){
+			if(_get == ""){
+				_get = "?";
+			}
+			if(typeof(option[i]) == "string" && option[i].substr(0, 1) != "#"){
+				_get += option[i];
+			}
+			else {
+				_get += (option[i].substr(1)+"="+$(option[i]).val() + "&");
+			}
+		}
+		_get = _get.substr(0, _get.length-1);	
+		location.href = _get + "#" + id.substr(1);
+	}
+	</script>
+	<div id="search" data-role="page" data-theme="g">
+		<div data-role="header">
+		  <h1>Search</h1>
+		</div>
+		<script>
+			//click fnc
+				window.onload=function(){
+					var user_name = sessionStorage.getItem("username");
+					console.log(user_name);
+					if(user_name!=""){
+						$("#prolink").attr('href','#profile');
+					}
+					else
+						$("#prolink").attr('href','#login');
+				};
+		</script>
+		<div data-role="content" role="main">
+			<p class="user" id="prop">
+				<a href="#profile" id="prolink"><img alt="user" src="img/user.png"></a>
+				&nbsp;Junqiang
+			<!--
+				<a href="#login">登录</a>
+			-->
+			</p>
+			<input id="input_name" type="text" placeholder="Textbook Name." />
+			<button id="btn_find" data-icon="flat-heart" data-theme="g" >Find</button>
+			<script>
+			$("#btn_find").click(function(){
+				var input_name = $("#input_name").val();
+				location.href = "?book_name="+input_name+"#result";
+			});
+			</script>
+		</div>
+	</div>
+	
+	<div id="profile" data-role="page" data-theme="g">
+		<div data-role="header">
+			<a data-role="button" data-icon="back" title="Search" href="#search">Search</a>
+			<h1>Junqiang's books</h1>
+			<a data-role="button" href="#login">logout</a>
+			<script>
+				$("#logout").click(function(){
+					sessionStorage.removeItem("username");
+					console.log(sessionStorage.getItem("username"));
+				});
+			</script>
+		</div>
+
+		<div data-role="content" role="main">		
+			<ul data-role="listview" data-inset="true">
+				<li>C++ Primer</li>
+				<li>Database</li>
+				<li>Time Story</li>
+			</ul>
+		</div>
+	</div>
+	
+	<div id="result" data-role="page" data-theme="g">
+		<div data-role="header">
+			<a data-role="button" data-icon="back" title="Search" href="#search">Search</a>
+			<h1>Book Lists</h1>
+		</div>
+
+		<div data-role="content" role="main">		
+			<ul data-role="listview" data-inset="true">
+				<li><img src="img/cover.jpg"/>C++ Primer<p>jq</p></li>
+				<li><img src="img/cover.jpg"/>Database<p>jonny</p></li>
+				<li><img src="img/cover.jpg"/>Time Story<p>lulu</p></li>
+			</ul>
+		</div>
+	</div>
+	
+	<div id="login" data-role="page" data-theme="g">
+		<div data-role="header">
+			<a data-role="button" data-icon="back" title="Search" href="#search">Search</a>
+			<h1>Login</h1>
+		</div>
+
+		<div data-role="content" role="main">		
+			<img src="img/user.png" />
+			<input id="input_username" type="text" placeholder="Username" />
+			<input id="input_password" type="text" placeholder="Password" />
+		
+			<button id="btn_login" data-icon="flat-heart" data-theme="g" >Login</button>
+			<script>
+			$("#btn_login").click(function(){
+				var user_name = $("#input_username").val();
+				sessionStorage.setItem("username",user_name);
+				console.log(user_name);
+				location.href = "#search";
+			});
+			</script>	
+		</div>
+	</div>
+  <div id="highlight"> </div>
+</body>
+</html>
