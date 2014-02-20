@@ -9,57 +9,20 @@
   <script src="js/jquery.mobile-1.4.0-rc.1.js"></script>
 </head>
 <body>
-	<script>
-	function change_page(id, callback, option){
-		$("#"+id).click(callback);
-		var _get = "";
-		for(var i in option){
-			if(_get == ""){
-				_get = "?";
-			}
-			if(typeof(option[i]) == "string" && option[i].substr(0, 1) != "#"){
-				_get += option[i];
-			}
-			else {
-				_get += (option[i].substr(1)+"="+$(option[i]).val() + "&");
-			}
-		}
-		_get = _get.substr(0, _get.length-1);	
-		location.href = _get + "#" + id.substr(1);
-	}
-	</script>
 	<div id="search" data-role="page" data-theme="g">
 		<div data-role="header">
 		  <h1>Search</h1>
 		</div>
-		<script>
-			//click fnc
-				window.onload=function(){
-					var user_name = sessionStorage.getItem("username");
-					console.log(user_name);
-					if(user_name!=""){
-						$("#prolink").attr('href','#profile');
-					}
-					else
-						$("#prolink").attr('href','#login');
-				};
-		</script>
 		<div data-role="content" role="main">
 			<p class="user" id="prop">
 				<a href="#profile" id="prolink"><img alt="user" src="img/user.png"></a>
-				&nbsp;Junqiang
+				<span>Junqiang</span>
 			<!--
 				<a href="#login">登录</a>
 			-->
 			</p>
 			<input id="input_name" type="text" placeholder="Textbook Name." />
 			<button id="btn_find" data-icon="flat-heart" data-theme="g" >Find</button>
-			<script>
-			$("#btn_find").click(function(){
-				var input_name = $("#input_name").val();
-				location.href = "?book_name="+input_name+"#result";
-			});
-			</script>
 		</div>
 	</div>
 	
@@ -67,13 +30,7 @@
 		<div data-role="header">
 			<a data-role="button" data-icon="back" title="Search" href="#search">Search</a>
 			<h1>Junqiang's books</h1>
-			<a data-role="button" href="#login">logout</a>
-			<script>
-				$("#logout").click(function(){
-					sessionStorage.removeItem("username");
-					console.log(sessionStorage.getItem("username"));
-				});
-			</script>
+			<a id="logout" data-role="button" href="#login">logout</a>
 		</div>
 
 		<div data-role="content" role="main">		
@@ -112,16 +69,75 @@
 			<input id="input_password" type="text" placeholder="Password" />
 		
 			<button id="btn_login" data-icon="flat-heart" data-theme="g" >Login</button>
-			<script>
-			$("#btn_login").click(function(){
-				var user_name = $("#input_username").val();
-				sessionStorage.setItem("username",user_name);
-				console.log(user_name);
-				location.href = "#search";
-			});
-			</script>	
 		</div>
 	</div>
   <div id="highlight"> </div>
 </body>
 </html>
+<script>
+//url
+//var url="http://api2.sysujwxt.com/v1";
+
+//check login fnc
+function check_login(){
+	var user_name = sessionStorage.getItem("username");
+	if(user_name && user_name != ""){
+		$("#prolink").attr('href','#profile');
+		$("#prop span").text(user_name);
+	}
+	else {
+		$("#prolink").attr('href','#login');
+		$("#prop span").text("please login");
+	}
+}
+
+//click fnc
+$(function(){
+	check_login();
+	window.onhashchange = check_login;
+	
+	
+	$("#btn_login").click(function(){
+		var user_name = $("#input_username").val();
+		sessionStorage.setItem("username",user_name);
+		console.log(user_name);
+		location.href = "#search";
+	});
+	
+	$("#logout").click(function(){
+		sessionStorage.removeItem("username");
+		console.log(sessionStorage.getItem("username"));
+	});
+	
+	$("#btn_find").click(function(){
+		var input_name = $("#input_name").val();
+		location.href = "?book_name="+input_name+"#result";
+	});
+	
+	$("a[href='#search']").click(function(){
+		var _get = location.search.match(new RegExp("[/?/&]"+"book_name"+"=([^/&]*)(/&)?", "i"));
+		$("#input_name").val(_get[1]);
+		//var bookname = _get[1];
+		//var burl=url+"/search_result_entry?name="+bookname;
+	//	console.log(burl);
+	});
+});
+
+function change_page(id, callback, option){
+	$("#"+id).click(callback);
+	var _get = "";
+	for(var i in option){
+		if(_get == ""){
+			_get = "?";
+		}
+		if(typeof(option[i]) == "string" && option[i].substr(0, 1) != "#"){
+			_get += option[i];
+		}
+		else {
+			_get += (option[i].substr(1)+"="+$(option[i]).val() + "&");
+		}
+	}
+	_get = _get.substr(0, _get.length-1);	
+	location.href = _get + "#" + id.substr(1);
+}
+</script>
